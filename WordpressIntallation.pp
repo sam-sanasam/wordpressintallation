@@ -96,6 +96,6 @@ file{'/var/www/html/wordpress':
 
 
 # sudo service apache2 restart
-exec{"service apache2 restart":
-path=> "/usr/sbin/" 
+exec{"systemctl restart apache2":
+path=> "/bin/" 
 }
