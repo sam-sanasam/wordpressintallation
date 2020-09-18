@@ -24,9 +24,9 @@ $allpackage.each |String $pack|{
 }                                                                                                                  
                                                                                                                    
 # seting up the authentification                                                                                   
-user{"mysqladmin":                                                                                                 
-ensure=> present,                                                                                                  
-password=> Sensitive ("rootpassword")                                                                              
+exec{"mysqladmin -u root password rootpassword":                                                                                                 
+path=> "/usr/bin",                                                                                               
+                                                                              
 }                                                                                                                  
                                                                                                                    
                                                                                                                    
@@ -63,10 +63,8 @@ ensure=>present,
 
 
 #sudo unzip /tmp/latest.zip -d /var/www/html
-exec{"unzip /tmp/latest.zip -y":
+exec{"unzip /tmp/latest.zip -d /var/www/html":
 path=> "/usr/bin",
-#command=>" /tmp/latest.zip"
-cwd=> "/var/www/html"
 }
 
 
@@ -74,31 +72,30 @@ cwd=> "/var/www/html"
 
 #wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php
 # sudo cp wp-config-sample.php /var/www/html/wordpress/wp-config.php 
+
 exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php":
-#command=>"https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php",
+
 path=>"/usr/bin",
 cwd=> "/var/www/html/wordpress"
 }
 
+
+
 # sudo chmod -R 775 /var/www/html/wordpress
-
-exec{"chmod -R 775 /var/www/html/wordpress":
-path=>"/bin",
-#command=> "chmod -R 775",
-#cwd=> "/var/www/html/wordpress"
-}
-
 #sudo chown -R www-data:www-data /var/www/html/wordpress
-exec{"chown -R www-data:www-data /var/www/html/wordpress":
-path=>"/bin",
-#command=> "chown -R www-data:www-data",
-#cwd=> "/var/www/html/wordpress"
+
+
+file{'/var/www/html/wordpress':
+  ensure => 'directory',
+  mode   => '0775',
+  owner  => 'www-data',
+  group  => 'www-data',
+
 }
+
+
 
 # sudo service apache2 restart
-
-
-service{"apache":
-ensure=> "running",
-restart=> "restart",
+exec{"service apache2 restart":
+path=> "/usr/sbin/" 
 }
