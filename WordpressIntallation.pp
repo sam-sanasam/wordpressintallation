@@ -80,7 +80,7 @@ creates =>"/var/www/html/wordpress/index.php"
 #wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php
 # sudo cp wp-config-sample.php /var/www/html/wordpress/wp-config.php 
 
-exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php -o wp-config.php":
+exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php -O wp-config.php":
 
 path=>"/usr/bin",
 cwd=> "/var/www/html/wordpress/",
