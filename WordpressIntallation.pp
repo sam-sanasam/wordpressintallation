@@ -43,7 +43,9 @@ cwd=> "/tmp",
 }
 
 #mysql -uroot -prootpassword < /tmp/mysqlcommands
-
+exec{"mysql -uroot -prootpassword < /tmp/mysqlcommands":                                                                                                 
+path=> "/usr/bin",                                                                                                                                                                          
+}   
 
 
 
