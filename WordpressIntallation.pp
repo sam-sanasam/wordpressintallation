@@ -1,6 +1,6 @@
 # update using apt                                                                                                 
 exec{"apt update":                                                                                                 
-path=> "/usr/bin"                                                                                                  
+path=> "/usr/bin"  
 }                                                                                                                  
                                                                                                                    
 # Apache Installation                                                                                              
@@ -24,8 +24,9 @@ $allpackage.each |String $pack|{
 }                                                                                                                  
                                                                                                                    
 # seting up the authentification                                                                                   
-exec{"mysqladmin -u root password rootpassword":                                                                                                 
-path=> "/usr/bin",                                                                                               
+exec{"mysqladmin -u root password rootpassword && touch /var/mysqlrootset":                                                                                                 
+path=> "/usr/bin",  
+creates => "/var/mysqlrootset"
                                                                               
 }                                                                                                                  
                                                                                                                    
@@ -40,11 +41,13 @@ ensure=> present,
 exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/mysqlcommands":
 path=> "/usr/bin",
 cwd=> "/tmp",
+creates => "/tmp/mysqlcommands"
 }
 
 #mysql -uroot -prootpassword < /tmp/mysqlcommands
-exec{"mysql -uroot -prootpassword < /tmp/mysqlcommands":                                                                                                 
-path=> "/usr/bin",                                                                                                                                                                          
+exec{"mysql -uroot -prootpassword < /tmp/mysqlcommands && touch /var/mysqlimportcomplete":                                                                                                 
+path=> "/usr/bin",
+creates => "/var/mysqlimportcomplete"
 }   
 
 
@@ -55,6 +58,7 @@ path=> "/usr/bin",
 exec{"wget https://wordpress.org/latest.zip":
 path=> "/usr/bin",
 cwd=> "/tmp",
+creates =>"/tmp/latest.zip"
 }
 
 #sudo apt install -y unzip
@@ -67,6 +71,7 @@ ensure=>present,
 #sudo unzip /tmp/latest.zip -d /var/www/html
 exec{"unzip /tmp/latest.zip -d /var/www/html":
 path=> "/usr/bin",
+creates =>"/var/www/html/wordpress/index.php"
 }
 
 
@@ -75,10 +80,11 @@ path=> "/usr/bin",
 #wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php
 # sudo cp wp-config-sample.php /var/www/html/wordpress/wp-config.php 
 
-exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php -o /wp-config.php":
+exec{"wget https://gitlab.com/roybhaskar9/devops/raw/master/coding/chef/chefwordpress/files/default/wp-config-sample.php -o wp-config.php":
 
 path=>"/usr/bin",
-cwd=> "/var/www/html/wordpress"
+cwd=> "/var/www/html/wordpress/"
+creates => "/var/www/html/wordpress/wp-config.php"
 }
 
 
